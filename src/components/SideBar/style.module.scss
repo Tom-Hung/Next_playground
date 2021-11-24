@@ -1,0 +1,16 @@
+.sideBar {
+  color: white;
+  background-color: firebrick;
+  width: 300px;
+
+  position: absolute;
+  transition: top 0.3s e;
+
+  .item {
+    padding: 15px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
