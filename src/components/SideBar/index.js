@@ -1,6 +1,12 @@
 import style from "./style.module.scss";
 import { debounce, throttle } from "lodash-es";
-import { useRef, useEffect, useState, useCallback, useMemo } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 const SideBar = ({ navs }) => {
   const [scrollY, setScrollY] = useState(0);
@@ -21,24 +27,22 @@ const SideBar = ({ navs }) => {
     });
   }, []);
 
-  const NavItem = useCallback(
-    navs.map((item, index) => {
-      return (
-        <div key={item + index} className={style.item}>
-          {item}
-        </div>
-      );
-    }),
-    []
-  );
-
-  // const NavItem = navs.map((item, index) => {
-  //   return (
-  //     <div key={item + index} className={style.item}>
-  //       {item}
-  //     </div>
-  //   );
-  // });
+  // React Memo 避免不必要的 render
+  // 預設檢查 props 是否改變，若沒有則不 re-render
+  // 可以自定義要檢查的函式，並做為第二個參數傳入
+  const NavItem = React.memo(function NavItem() {
+    return (
+      <>
+        {navs.map((item, index) => {
+          return (
+            <div key={item + index} className={style.item}>
+              {item}
+            </div>
+          );
+        })}
+      </>
+    );
+  });
 
   useEffect(() => {
     // 監聽頁面的 scroll 事件
@@ -65,7 +69,7 @@ const SideBar = ({ navs }) => {
         style={{ top: scrollY + 80 }}
         ref={sideBarRef}
       >
-        {NavItem}
+        <NavItem />
       </div>
     </div>
   );
